@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>TRIS - Gioco del Tris</title>
+    
+
+    <style>
+        h1, h2 {
+    font-weight: bold;
+    font-family: Arial, sans-serif;
+    color:#003366;
+}
+
+body {
+    background-color: #f7f7f7;
+    font-family: Arial, sans-serif;
+}
+
+
+#titolo {
+    height: 60px;
+    font-weight: bold;
+    font-size: 200%;
+    color:#ffffff;
+    background-color: #09df97;
+    padding-left: 20px;
+    display: flex;
+    align-items: center;
+}
+
+#titolo2 {
+    height: 60px;
+    font-weight: bold;
+    font-size: 150%;
+    padding-left: 20px;
+    display: flex;
+    align-items: center;
+    background-color: #e6e6e6;
+    color:#09df97;
+}
+
+
+#navbar {
+    border: 2px solid #ffffff;
+    background-color:#09df97;
+}
+
+#navbar ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 10px;
+    display: flex;
+    gap: 20px;
+}
+
+#navbar li {
+    font-weight: bold;
+}
+
+#navbar a:link {
+    color: #ffffff;
+    text-decoration: none;
+}
+#navbar a:visited {
+    color:#003366;
+    text-decoration: none;
+}
+
+#navbar a:hover {
+    color:#ff6600;
+}
+
+#navbar .attivo {
+    color: #ff6600 !important; 
+    text-decoration: underline;
+    font-weight: bold;
+}
+
+
+#contenuto {
+    background-color:#ffffff;
+    margin: 20px auto;
+    width: 60%;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.notizia {
+    font-size: 90%;
+}
+
+
+.box-film {
+    border: 2px solid #003366;
+    padding: 15px;
+    margin: 20px 0;
+    border-radius: 10px;
+    background-color: #d9ecff;
+}
+
+.box-film img {
+    width: 120px;
+    float: left;
+    margin-right: 20px;
+    border-radius: 10px;
+}
+
+.box-film:hover {
+    background-color: #cce4ff;
+}
+
+
+#footer {
+    margin-top: 40px;
+    padding: 20px;
+    text-align: center;
+    font-weight: bold;
+    background-color: #09df97;
+    color:#ffffff;
+}
+
+#footer a:link,
+#footer a:visited {
+    color:#318d06;
+    text-decoration: none;
+}
+
+#footer a:hover {
+    color:#ffcc00;
+}
+
+.square {
+                width: 600px;
+                height: 600px;
+                background-color: rgb(127, 182, 255);
+            }
+
+
+            .row {
+                height: 200px;
+                width: 100%;
+                background-color: rgb(252, 170, 19);
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+            }
+
+
+            .cell{
+                height: 200px;
+                width: 200px;
+                margin: 0px;
+                padding: 0px;
+
+
+            }        
+    </style>
+    <script>
+            let currentSymbol = "X";
+            let trisMatrix = [
+                [null, null, null],
+                [null, null, null],
+                [null, null, null]
+            ];
+            let isGameOver = false;
+
+            function setSymbol(i, j) {
+                //Compongo l'id della cella cliccata, di cui voglio modificare il testo
+                let cellId = 'cell-' + i + '-' + j;
+                
+                //Ottengo la cella cliccata dal suo id
+                let clickedCell = document.getElementById(cellId);
+                
+                //Imposto il testo interno della cella cliccata con il simbolo corrente
+                clickedCell.innerHTML = currentSymbol;
+
+                //TODO 1: modifico la trisMatrix, aggiungendo il simbolo corrente nella cella corrispondente al pulsante cliccato
+                trisMatrix[i][j] = currentSymbol;
+                //Disabilito la cella cliccata
+                clickedCell.disabled = true;
+
+                //console.log(trisMatrix);
+                
+
+                //Vittoria: uno dei due giocatori ha fatto tris
+                check();
+                
+                //TODO 2 (serve funzione):controllo lo stato del gioco e valuto se vittoria o pareggio
+                //Pareggio: tutte le celle sono occupate e nessuno ha fatto tris
+                if(hasEmptyCells() == false && isGameOver == false) {
+                    isGameOver = true;
+                    alert("Pareggio!");
+                }
+
+                //Modifico il simbolo corrente (se era X, cambio con O e viceversa)
+                if(currentSymbol === 'X') {
+                    currentSymbol = 'O';
+                }
+                else {
+                    currentSymbol = 'X';
+                }
+            }
+
+            function hasEmptyCells() {
+                for(let i = 0; i < 3; i++) {
+                    for(let j = 0; j < 3; j++) {
+                        if(trisMatrix[i][j] == null) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+
+            function check() {
+                //Definisco le 8 possibili condizioni di vittoria
+                //Condizione di vittoria sulla prima riga
+                let cond1 = currentSymbol === trisMatrix[0][0] && trisMatrix[0][0] === trisMatrix[0][1] && trisMatrix[0][1] === trisMatrix[0][2];
+                //Condizione di vittoria sulla seconda riga
+                let cond2 = currentSymbol === trisMatrix[1][0] && trisMatrix[1][0] === trisMatrix[1][1] && trisMatrix[1][1] === trisMatrix[1][2];
+                //Condizione di vittoria sulla terza riga
+                let cond3 = currentSymbol === trisMatrix[2][0] && trisMatrix[2][0] === trisMatrix[2][1] && trisMatrix[2][1] === trisMatrix[2][2];
+                
+                //Condizione di vittoria sulla prima colonna
+                let cond4 = currentSymbol === trisMatrix[0][0] && trisMatrix[0][0] === trisMatrix[1][0] && trisMatrix[1][0] === trisMatrix[2][0];
+                //Condizione di vittoria sulla seconda colonna
+                let cond5 = currentSymbol === trisMatrix[0][1] && trisMatrix[0][1] === trisMatrix[1][1] && trisMatrix[1][1] === trisMatrix[2][1];
+                //Condizione di vittoria sulla terza colonna
+                let cond6 = currentSymbol === trisMatrix[0][2] && trisMatrix[0][2] === trisMatrix[1][2] && trisMatrix[1][2] === trisMatrix[2][2];
+
+                //Condizione di vittoria sulla prima diagonale
+                let cond7 = currentSymbol === trisMatrix[0][0] && trisMatrix[0][0] === trisMatrix[1][1] && trisMatrix[1][1] === trisMatrix[2][2];
+                //Condizione di vittoria sulla prima diagonale
+                let cond8 = currentSymbol === trisMatrix[0][2] && trisMatrix[0][2] === trisMatrix[1][1] && trisMatrix[1][1] === trisMatrix[2][0];
+                              
+                //Se una delle condizioni è vera, allora la partita termina
+                if(cond1 || cond2 || cond3 || cond4 || cond5 || cond6 || cond7 || cond8) {
+                    alert(currentSymbol + ' vince!');
+                    isGameOver = true;
+                }
+            }
+
+        </script>
+</head>
+
+<body>
+
+    <div id="titolo">
+        Ludopatia e Gioco d'Azzardo
+    </div>
+
+    <div id="titolo2">
+        progetto di informatica e ed.civica
+    </div>
+
+    <div id="navbar">
+        <ul>
+            <li><a href="home.html"> Home </a></li>
+            <li><a href="quiz.html"> Quiz Gaming e Ludopatia</a></li>
+            <li><a href="storia.html"> Storia del Gioco Tris </a></li>
+            <li><a class="attivo" href="tris.html"> Gioco del Tris (2P) </a></li>
+        </ul>
+    </div>
+    
+    <div class="container">
+            <div class="square">
+                <div class="row">
+                    <button id="cell-0-0" class="cell" onclick="setSymbol(0, 0)"></button>
+                    <button id="cell-0-1" class="cell" onclick="setSymbol(0, 1)"></button>
+                    <button id="cell-0-2" class="cell" onclick="setSymbol(0, 2)"></button>
+                </div>
+                <div class="row">
+                    <button id="cell-1-0" class="cell" onclick="setSymbol(1, 0)"></button>
+                    <button id="cell-1-1" class="cell" onclick="setSymbol(1, 1)"></button>
+                    <button id="cell-1-2" class="cell" onclick="setSymbol(1, 2)"></button>
+                </div>
+                <div class="row">
+                    <button id="cell-2-0" class="cell" onclick="setSymbol(2, 0)"></button>
+                    <button id="cell-2-1" class="cell" onclick="setSymbol(2, 1)"></button>
+                    <button id="cell-2-2" class="cell" onclick="setSymbol(2, 2)"></button>
+                </div>
+            </div>
+        </div>
+
+ 
+       
+    </div>
+
+    <div id="footer">
+        Progetto di <a href="mailto:alessandro.bianchi@salesiani.novara.it">Alessandro Bianchi</a><br>
+        Scuola Salesiani Don Bosco – Novara – A.S. 2025/2026 – Classe 4B<br>
+        <a href="https://www.salesianinovara.it">www.salesianinovara.it</a>
+    </div>
+
+</body>
+</html>
